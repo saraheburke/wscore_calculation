@@ -5,6 +5,8 @@ Created on Thu Feb 18 15:37:13 2021
 
 @author: seburke
 """
+#This script 1. runs all controls through a linear model to get coefficients for brain volume or cortical thickness values predicted by age (and any other predictors of interest), 2. calculates a wscore for each atlas brain region by subtracting the intercept and the coefficients multiplied by their respective preditors from the actual value divided by the standard deviation of the control group.
+
 import pandas as pd
 import numpy as np
 import os
@@ -12,9 +14,11 @@ import glob
 
 os.chdir('/path/to/data')
 os.listdir('.')
+
+#list all csv files that contain cortical thickness or volume values
 files = glob.glob('*lausanne.csv')
 
-##optional create subset list of ids to use from full list of files to test loops
+##optional create subset list of ids to use from full list of files to test script
 select=files[0:10]
 
 #read in control csvs with extracted thickness/volume values per brain roi label and combine csvs
@@ -24,7 +28,7 @@ combined_ct=pd.concat([pd.read_csv(f) for f in select ])
 temp_vals=combined_ct[(combined_ct.measure=="thickness") & (combined_ct.system=="lausanne250") & (combined_ct.metric=="mean")]
 temp_vals=temp_vals.reset_index(drop=True)
 
-#read in demos to be used as predictor variables
+#read in demos to be used as predictor variables (age in this case)
 age_vals=pd.read_excel('path/to/demos.xlsx')
 
 #read in atlas labels key and create index of label id #s
@@ -41,7 +45,7 @@ def RSE(y_true, y_predicted):
     rse=math.sqrt(RSS / (len(y_true)-2))
     return rse
 
-#loop through each label and plug data into linear model
+#loop through each label and plug data into linear model (gray matter volume ~ age)
 from sklearn.linear_model import LinearRegression
 
 tmpB1=pd.DataFrame()
@@ -71,8 +75,8 @@ wsCoffs = pd.DataFrame.from_dict({
     'residual_se':rse,
     })
 
-#calculate wscore using coefficients from linear model
-#read in subject data
+#calculate wscore using coefficients outputted from the control linear model
+#read in subject thickness/volume data
 
 os.chdir('path/to/directory')
 os.listdir('.')
