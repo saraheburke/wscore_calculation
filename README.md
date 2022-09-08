@@ -1,6 +1,6 @@
 wscore calculation
 
-This repository provides the scripts needed to calculate Wscores for  cortical thickness or volume values of  MRI scans of the human brain that have been processed and quantified for ROI based analysis used in (Burke et al., 2022)
+This repository provides the scripts needed to calculate Wscores of cortical thickness or volume values from MRI scans of the human brain that have been processed and quantified for ROI based analysis used in (Burke et al., 2022).
 
 These scripts utitilize the Lausanne atlas (Hagmann et al., 2008). However, any other atlas can be substituted. 
 
